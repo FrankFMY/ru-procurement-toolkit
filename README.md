@@ -25,7 +25,7 @@ bun add ru-procurement-toolkit
 npm install ru-procurement-toolkit
 ```
 
-> Package publishing is planned. For now, use directly from GitHub or as a workspace dependency.
+The package is published on npm. Releases are built and verified from the corresponding Git tag.
 
 ## Usage
 
@@ -139,8 +139,7 @@ Commercial AI analysis, prompts, fit scoring and report generation remain privat
 
 ## Author
 
-**Прянишников Артём Алексеевич**
-Saratov, Russia
+**Artem Prianishnikov**
 GitHub: [@FrankFMY](https://github.com/FrankFMY)
 Telegram: [@FrankFMY](https://t.me/FrankFMY)
 Email: [Pryanishnikovartem@gmail.com](mailto:Pryanishnikovartem@gmail.com)

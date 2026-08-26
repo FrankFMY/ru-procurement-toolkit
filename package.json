@@ -1,8 +1,8 @@
 {
   "name": "ru-procurement-toolkit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Framework-neutral TypeScript utilities for Russian procurement and tender products.",
-  "author": "Artyom Pryanishnikov <Pryanishnikovartem@gmail.com> (https://github.com/FrankFMY)",
+  "author": "Artem Prianishnikov <Pryanishnikovartem@gmail.com> (https://github.com/FrankFMY)",
   "license": "Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -12,7 +12,9 @@
     "dist",
     "README.md",
     "LICENSE",
-    "NOTICE"
+    "NOTICE",
+    "SECURITY.md",
+    "CHANGELOG.md"
   ],
   "repository": {
     "type": "git",
@@ -32,9 +34,10 @@
     "check": "tsc --noEmit",
     "test": "bun test",
     "build": "rm -rf dist && bun build ./src/index.ts --outdir dist --target node && tsc -p tsconfig.build.json",
-    "prepublishOnly": "bun run format:check && bun run check && bun test && bun run build",
-    "format": "prettier --write \"**/*.{ts,json,md,yml,yaml}\"",
-    "format:check": "prettier --check \"**/*.{ts,json,md,yml,yaml}\""
+    "package:check": "node scripts/verify-package-contract.mjs",
+    "prepublishOnly": "bun run format:check && bun run check && bun test && bun run build && bun run package:check",
+    "format": "prettier --write \"**/*.{ts,mjs,json,md,yml,yaml}\"",
+    "format:check": "prettier --check \"**/*.{ts,mjs,json,md,yml,yaml}\""
   },
   "publishConfig": {
     "access": "public"
