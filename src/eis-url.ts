@@ -55,7 +55,14 @@ function extractQueryValue(input: string, key: string): string | null {
   } catch {
     const re = new RegExp(`[?&]${escapeRegExp(key)}=([^&#\\s]+)`, 'i');
     const match = input.match(re);
-    return match?.[1] ? decodeURIComponent(match[1]) : null;
+    if (!match?.[1]) return null;
+    try {
+      return decodeURIComponent(match[1]);
+    } catch {
+      // A pasted snippet may contain invalid percent escapes. Continue the
+      // ordinary free-text search rather than throwing from a fallback.
+      return null;
+    }
   }
 }
 
