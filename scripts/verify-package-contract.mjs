@@ -11,7 +11,21 @@ try {
     cwd: root,
     encoding: 'utf8'
   }).trim();
-  const tarball = join(target, packOutput.split('\n').at(-1));
+  const tarball =
+    process.env.RU_REGISTRY === '1'
+      ? 'ru-procurement-toolkit@0.1.1'
+      : join(target, packOutput.split('\n').at(-1));
+  const packed = join(target, packOutput.split('\n').at(-1));
+  const entries = execFileSync('tar', ['-tzf', packed], { encoding: 'utf8' }).trim().split('\n');
+  for (const required of [
+    'package/LICENSE',
+    'package/NOTICE',
+    'package/README.md',
+    'package/dist/index.js',
+    'package/dist/index.d.ts'
+  ]) {
+    if (!entries.includes(required)) throw new Error(`Missing package artifact: ${required}`);
+  }
   writeFileSync(
     join(target, 'package.json'),
     '{"name":"ru-procurement-toolkit-consumer","private":true,"type":"module"}\n'
@@ -40,6 +54,7 @@ try {
           moduleResolution: 'NodeNext',
           noEmit: true,
           strict: true,
+          skipLibCheck: false,
           target: 'ES2022'
         },
         include: ['consumer.ts']
@@ -56,6 +71,23 @@ try {
       stdio: 'inherit'
     }
   );
+  writeFileSync(
+    join(target, 'runtime.mjs'),
+    `
+import assert from 'node:assert/strict';
+import { extractPurchaseNumber, parseEisUrl, parseRubAmount, prioritizeTenderDocuments, detectTenderDocumentType } from 'ru-procurement-toolkit';
+assert.equal(parseRubAmount('1234.56'), 1234.56);
+assert.equal(parseRubAmount('1 250 000,50 руб.'), 1250000.5);
+assert.equal(extractPurchaseNumber('text ?regNumber=%ZZ'), null);
+assert.equal(parseEisUrl('text ?regNumber=%E0%A4').purchaseNumber, null);
+assert.equal(extractPurchaseNumber('Закупка 0373100001026000001'), '0373100001026000001');
+assert.equal(detectTenderDocumentType('Техническое задание.pdf'), 'technical_specification');
+assert.equal(prioritizeTenderDocuments([{ name: 'Архив.zip', url: 'https://example.test/a.zip' }, { name: 'Техническое задание.pdf', url: 'https://example.test/tz.pdf' }])[0].name, 'Техническое задание.pdf');
+console.log('installed parser/document runtime: PASS');
+`
+  );
+  execFileSync(process.execPath, ['runtime.mjs'], { cwd: target, stdio: 'inherit' });
+  execFileSync('bun', ['runtime.mjs'], { cwd: target, stdio: 'inherit' });
   console.log('isolated TypeScript NodeNext consumer: PASS');
 } finally {
   rmSync(target, { force: true, recursive: true });

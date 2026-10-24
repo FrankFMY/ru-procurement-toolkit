@@ -4,7 +4,7 @@ export function parseRubAmount(input: string | number | null | undefined): numbe
 
   const normalized = input
     .replace(/\u00a0/g, ' ')
-    .replace(/[₽ррублейруб.]/gi, '')
+    .replace(/[₽ррублейруб]/gi, '')
     .replace(/\s+/g, '')
     .replace(',', '.')
     .trim();

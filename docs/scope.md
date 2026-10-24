@@ -1,39 +1,7 @@
-# Scope and Safety Boundary
+# Scope
 
-This repository is intentionally small and public.
+This library provides local, deterministic EIS URL and purchase-number parsing, ruble amount normalization, filename classification, and document ranking.
 
-## Included
+It makes no network calls, downloads no documents, stores no data, and implements no commercial scoring or legal-risk policy. URL recognition does not authorize a fetch. Applications remain responsible for input validation, network security, exact-decimal accounting, and their own business decisions.
 
-- EIS/Zakupki URL parsing.
-- Purchase number extraction.
-- Russian ruble amount parsing.
-- Generic public document type detection.
-- Generic document priority ranking.
-
-## Excluded
-
-- AI prompts.
-- Tender risk scoring.
-- Company-fit matching.
-- Proprietary report templates.
-- Customer data.
-- Production credentials.
-- TenderCRM or TenderCheck AI commercial code.
-
-## Why This Boundary Exists
-
-Open-source procurement utilities can help the community and improve public credibility without giving away the commercial core of TenderCheck AI or TenderCRM.
-
-```mermaid
-flowchart TD
-    Public[Open-source toolkit] --> A[Parsing]
-    Public --> B[Normalization]
-    Public --> C[Generic document helpers]
-
-    Private[Private products] --> D[AI audit]
-    Private --> E[Risk engine]
-    Private --> F[Company fit]
-    Private --> G[Reports and pricing]
-
-    Public -. feeds safely into .-> Private
-```
+The modules are independent pure helpers. Their TypeScript interfaces are exported from the package root; no private product or service is required.
